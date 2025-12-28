@@ -1,0 +1,400 @@
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import { getWhatsAppLink } from '../config/whatsapp'
+
+// Gorras disponibles de Barbas Hats con todas sus imágenes
+const products = [
+  {
+    id: 1,
+    name: 'BARBAS HATS X CT "THREE STARS" G5',
+    mainImage: '/images/1.webp',
+    images: [
+      '/images/1.webp',
+      '/images/2.webp',
+      '/images/3.webp',
+      '/images/4.webp',
+      '/images/6.webp',
+    ],
+    price: '$195.800',
+  },
+  {
+    id: 2,
+    name: 'BARBAS HATS X CT "GALAXY CT" G5',
+    mainImage: '/images/barbas1.webp',
+    images: [
+      '/images/barbas1.webp',
+      '/images/barbas2.webp',
+      '/images/barbas3.webp',
+      '/images/barbas4.webp',
+      '/images/barbas5.webp',
+      '/images/barbas6.webp',
+      '/images/barbas7.webp',
+      '/images/barbas8.webp',
+      '/images/barbas9.jpg',
+      '/images/CTGALAXY_--BARBASHATSxCTT.webp',
+    ],
+    price: '$195.800',
+  },
+  {
+    id: 3,
+    name: 'BARBAS HATS X CT "CHROME CT" G5',
+    mainImage: '/images/barbascruz.webp',
+    images: [
+      '/images/barbascruz2.webp',
+      '/images/barbascruz3.webp',
+      '/images/barbascruz4.webp',
+      '/images/barbascruz5.webp',
+    ],
+    price: '$195.800',
+  },
+]
+
+const Gallery = () => {
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isZoomed, setIsZoomed] = useState(false)
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 })
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product)
+    setCurrentImageIndex(0)
+  }
+
+  const handleCloseModal = () => {
+    setSelectedProduct(null)
+    setCurrentImageIndex(0)
+  }
+
+  const handleNextImage = () => {
+    if (selectedProduct) {
+      setIsZoomed(false)
+      setCurrentImageIndex((prev) =>
+        prev === selectedProduct.images.length - 1 ? 0 : prev + 1
+      )
+    }
+  }
+
+  const handlePrevImage = () => {
+    if (selectedProduct) {
+      setIsZoomed(false)
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? selectedProduct.images.length - 1 : prev - 1
+      )
+    }
+  }
+
+  const handleWhatsAppClick = () => {
+    if (selectedProduct) {
+      const message = `¡Hola! Estoy interesado en la ${selectedProduct.name}. ¿Podrías darme más información?`
+      window.open(getWhatsAppLink(message), '_blank', 'noopener,noreferrer')
+    }
+  }
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    setZoomPosition({ x, y })
+  }
+
+  const handleMouseEnter = () => {
+    setIsZoomed(true)
+  }
+
+  const handleMouseLeave = () => {
+    setIsZoomed(false)
+  }
+
+  return (
+    <section id="gallery" className="py-20 bg-dark-900">
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
+            Disponible <span className="gradient-text">Barbas x Ct Natanel Cano</span>
+          </h2>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            Explora nuestra selección de gorras premium diseñadas Calidad G5
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          {products.map((product, index) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: [0.25, 0.46, 0.45, 0.94]
+              }}
+              viewport={{ once: true, amount: 0.2 }}
+              className="group cursor-pointer"
+              onClick={() => handleProductClick(product)}
+            >
+              {/* Contenedor del producto - sin recuadro */}
+              <div className="relative">
+                {/* Imagen del producto */}
+                <div className="aspect-square relative overflow-hidden mb-4">
+                  <motion.img
+                    src={product.mainImage}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeOut"
+                    }}
+                    style={{
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                    }}
+                    onError={(e) => {
+                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect fill="%232a2a2a" width="400" height="400"/%3E%3Ctext fill="%23666" font-family="sans-serif" font-size="18" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3EAgrega tu imagen%3C/text%3E%3C/svg%3E'
+                    }}
+                  />
+
+                  {/* Badge de nuevo - más discreto */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      delay: index * 0.1 + 0.3
+                    }}
+                    className="absolute top-2 right-2 bg-primary-500 text-white px-3 py-1 text-xs font-semibold"
+                  >
+                    NUEVO
+                  </motion.div>
+                </div>
+
+                {/* Información del producto */}
+                <div className="space-y-2">
+                  <h3 className="text-base font-medium group-hover:text-primary-400 transition-colors duration-200 line-clamp-2">
+                    {product.name}
+                  </h3>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xl font-bold gradient-text">
+                      {product.price}
+                    </span>
+                    <motion.button
+                      whileHover={{
+                        scale: 1.05
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 text-sm font-semibold transition-colors duration-200"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleProductClick(product)
+                      }}
+                    >
+                      Ver
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Modal de Galería */}
+        <AnimatePresence>
+          {selectedProduct && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+              onClick={handleCloseModal}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+                className="relative w-full max-w-6xl bg-dark-800 rounded-2xl overflow-hidden border border-white/10"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Botón cerrar */}
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleCloseModal}
+                  className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-dark-900/80 hover:bg-primary-500 rounded-full text-white transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </motion.button>
+
+                <div className="grid md:grid-cols-2 gap-0">
+                  {/* Galería de imágenes */}
+                  <div className="relative bg-gradient-to-br from-dark-700 to-dark-800">
+                    {/* Imagen principal */}
+                    <div
+                      className="aspect-square relative overflow-hidden"
+                      style={{ cursor: isZoomed ? 'zoom-out' : 'zoom-in' }}
+                      onMouseMove={handleMouseMove}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={currentImageIndex}
+                          src={selectedProduct.images[currentImageIndex]}
+                          alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
+                          className="w-full h-full object-cover"
+                          initial={{ opacity: 0, x: 100, scale: 1 }}
+                          animate={{
+                            opacity: 1,
+                            x: 0,
+                            scale: isZoomed ? 2 : 1
+                          }}
+                          exit={{ opacity: 0, x: -100 }}
+                          transition={{
+                            opacity: { duration: 0.3, ease: [0.33, 1, 0.68, 1] },
+                            x: { duration: 0.3, ease: [0.33, 1, 0.68, 1] },
+                            scale: { duration: 0.2, ease: "easeOut" }
+                          }}
+                          style={{
+                            transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                          }}
+                        />
+                      </AnimatePresence>
+
+                      {/* Botones de navegación */}
+                      {selectedProduct.images.length > 1 && (
+                        <>
+                          <motion.button
+                            whileHover={{ scale: 1.1, x: -4 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={handlePrevImage}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-dark-900/80 hover:bg-primary-500 rounded-full text-white transition-colors"
+                          >
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                          </motion.button>
+
+                          <motion.button
+                            whileHover={{ scale: 1.1, x: 4 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={handleNextImage}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-dark-900/80 hover:bg-primary-500 rounded-full text-white transition-colors"
+                          >
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </motion.button>
+                        </>
+                      )}
+
+                      {/* Indicador de imagen */}
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-dark-900/80 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-semibold">
+                        {currentImageIndex + 1} / {selectedProduct.images.length}
+                      </div>
+                    </div>
+
+                    {/* Miniaturas */}
+                    <div className="p-4 flex gap-2 overflow-x-auto">
+                      {selectedProduct.images.map((image, index) => (
+                        <motion.button
+                          key={index}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                            index === currentImageIndex
+                              ? 'border-primary-500'
+                              : 'border-white/20 hover:border-white/40'
+                          }`}
+                        >
+                          <img
+                            src={image}
+                            alt={`Miniatura ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Información del producto */}
+                  <div className="p-8 flex flex-col justify-between">
+                    <div>
+                      <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="text-3xl font-bold mb-4"
+                      >
+                        {selectedProduct.name}
+                      </motion.h2>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="mb-8"
+                      >
+                        <span className="text-4xl font-bold gradient-text">
+                          {selectedProduct.price}
+                        </span>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="space-y-4 text-gray-300"
+                      >
+                        <p className="text-lg">
+                          Gorra premium de edición limitada Barbas Hats x CT.
+                        </p>
+                        <ul className="space-y-2">
+                          <li className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
+                            Diseño exclusivo
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
+                            Materiales de alta calidad
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
+                            Ajuste perfecto
+                          </li>
+                        </ul>
+                      </motion.div>
+                    </div>
+
+                    <motion.button
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      whileHover={{ scale: 1.02, backgroundColor: "rgb(147, 51, 234)" }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleWhatsAppClick}
+                      className="w-full bg-primary-500 text-white py-4 rounded-full text-lg font-semibold shadow-lg shadow-primary-500/30 transition-colors"
+                    >
+                      Ordenar por WhatsApp
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </section>
+  )
+}
+
+export default Gallery
