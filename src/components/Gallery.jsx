@@ -1,6 +1,28 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useCallback, useRef, memo } from 'react'
 import { getWhatsAppLink } from '../config/whatsapp'
+
+// Throttle helper for performance
+const throttle = (func, delay) => {
+  let timeoutId;
+  let lastExecTime = 0;
+  return (...args) => {
+    const currentTime = Date.now();
+    const timeSinceLastExec = currentTime - lastExecTime;
+
+    const exec = () => {
+      lastExecTime = currentTime;
+      func(...args);
+    };
+
+    if (timeSinceLastExec > delay) {
+      exec();
+    } else {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(exec, delay - timeSinceLastExec);
+    }
+  };
+};
 
 // Gorras disponibles de Barbas Hats con todas sus imágenes
 const products = [
@@ -47,6 +69,19 @@ const products = [
     ],
     price: '$195.800',
   },
+  {
+    id: 4,
+    name: 'BARBAS HATS X CT "ORIENTAL TUMBADO" G5',
+    mainImage: '/images/11.webp',
+    images: [
+      '/images/12.webp',
+      '/images/13.webp',
+      '/images/14.webp',
+      '/images/15.webp',
+      '/images/16.webp',
+    ],
+    price: '$195.800',
+  },
 ]
 
 const Gallery = () => {
@@ -55,55 +90,63 @@ const Gallery = () => {
   const [isZoomed, setIsZoomed] = useState(false)
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 })
 
-  const handleProductClick = (product) => {
+  // useCallback to prevent recreating functions on every render
+  const handleProductClick = useCallback((product) => {
     setSelectedProduct(product)
     setCurrentImageIndex(0)
-  }
+  }, [])
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setSelectedProduct(null)
     setCurrentImageIndex(0)
-  }
+  }, [])
 
-  const handleNextImage = () => {
+  const handleNextImage = useCallback(() => {
     if (selectedProduct) {
       setIsZoomed(false)
       setCurrentImageIndex((prev) =>
         prev === selectedProduct.images.length - 1 ? 0 : prev + 1
       )
     }
-  }
+  }, [selectedProduct])
 
-  const handlePrevImage = () => {
+  const handlePrevImage = useCallback(() => {
     if (selectedProduct) {
       setIsZoomed(false)
       setCurrentImageIndex((prev) =>
         prev === 0 ? selectedProduct.images.length - 1 : prev - 1
       )
     }
-  }
+  }, [selectedProduct])
 
-  const handleWhatsAppClick = () => {
+  const handleWhatsAppClick = useCallback(() => {
     if (selectedProduct) {
       const message = `¡Hola! Estoy interesado en la ${selectedProduct.name}. ¿Podrías darme más información?`
       window.open(getWhatsAppLink(message), '_blank', 'noopener,noreferrer')
     }
-  }
+  }, [selectedProduct])
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-    setZoomPosition({ x, y })
-  }
+  // Throttled mouse move handler for better performance
+  const handleMouseMoveThrottled = useRef(
+    throttle((e) => {
+      const rect = e.currentTarget.getBoundingClientRect()
+      const x = ((e.clientX - rect.left) / rect.width) * 100
+      const y = ((e.clientY - rect.top) / rect.height) * 100
+      setZoomPosition({ x, y })
+    }, 16) // ~60fps
+  ).current
 
-  const handleMouseEnter = () => {
+  const handleMouseMove = useCallback((e) => {
+    handleMouseMoveThrottled(e)
+  }, [handleMouseMoveThrottled])
+
+  const handleMouseEnter = useCallback(() => {
     setIsZoomed(true)
-  }
+  }, [])
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setIsZoomed(false)
-  }
+  }, [])
 
   return (
     <section id="gallery" className="py-20 bg-dark-900">
@@ -145,6 +188,7 @@ const Gallery = () => {
                   <motion.img
                     src={product.mainImage}
                     alt={product.name}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                     initial={{ scale: 1 }}
                     whileHover={{ scale: 1.05 }}
@@ -250,6 +294,7 @@ const Gallery = () => {
                           key={currentImageIndex}
                           src={selectedProduct.images[currentImageIndex]}
                           alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
+                          loading="eager"
                           className="w-full h-full object-cover"
                           initial={{ opacity: 0, x: 100, scale: 1 }}
                           animate={{
@@ -319,6 +364,7 @@ const Gallery = () => {
                           <img
                             src={image}
                             alt={`Miniatura ${index + 1}`}
+                            loading="lazy"
                             className="w-full h-full object-cover"
                           />
                         </motion.button>
@@ -397,4 +443,5 @@ const Gallery = () => {
   )
 }
 
-export default Gallery
+// Wrap with React.memo to prevent unnecessary re-renders
+export default memo(Gallery)

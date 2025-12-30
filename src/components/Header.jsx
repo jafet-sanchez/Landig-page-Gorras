@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, memo } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { getWhatsAppLink } from '../config/whatsapp'
@@ -7,17 +7,25 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
+    let ticking = false
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 50)
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleContactClick = () => {
+  const handleContactClick = useCallback(() => {
     window.open(getWhatsAppLink(), '_blank', 'noopener,noreferrer')
-  }
+  }, [])
 
   return (
     <motion.header
@@ -51,4 +59,5 @@ const Header = () => {
   )
 }
 
-export default Header
+// Wrap with React.memo to prevent unnecessary re-renders
+export default memo(Header)

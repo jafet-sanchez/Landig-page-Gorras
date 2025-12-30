@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion'
+import { memo, useCallback } from 'react'
 import { getWhatsAppLink } from '../config/whatsapp'
 
 const CTA = () => {
-  const handleWhatsAppClick = () => {
+  const handleWhatsAppClick = useCallback(() => {
     window.open(
       getWhatsAppLink('¡Hola! Quiero más información sobre las gorras KROWN'),
       '_blank',
       'noopener,noreferrer'
     )
-  }
+  }, [])
 
   return (
     <section id="CTA" className="py-20 bg-gradient-to-br from-primary-900/20 via-dark-800 to-dark-900 relative overflow-hidden">
@@ -91,4 +92,5 @@ const CTA = () => {
   )
 }
 
-export default CTA
+// Wrap with React.memo to prevent unnecessary re-renders
+export default memo(CTA)

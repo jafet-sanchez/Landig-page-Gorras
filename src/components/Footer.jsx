@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
+import { memo, useMemo } from 'react'
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear()
+  const currentYear = useMemo(() => new Date().getFullYear(), [])
 
   return (
     <footer className="bg-dark-900 border-t border-white/10 py-12">
@@ -85,4 +86,5 @@ const Footer = () => {
   )
 }
 
-export default Footer
+// Wrap with React.memo to prevent unnecessary re-renders
+export default memo(Footer)

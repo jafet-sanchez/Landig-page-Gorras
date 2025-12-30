@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import FuzzyText from './FuzzyText'
 
 const NotFound = () => {
   return (
@@ -35,99 +36,38 @@ const NotFound = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
-          {/* Animated 404 SVG */}
+          {/* Animated 404 Fuzzy Text */}
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="mb-8"
+            className="mb-8 flex justify-center"
           >
-            <svg
-              className="w-full max-w-md mx-auto"
-              viewBox="0 0 400 200"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {/* Number 4 */}
-              <motion.path
-                d="M40 50 V110 H100 M100 50 V150"
-                stroke="url(#gradient1)"
-                strokeWidth="8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, ease: "easeInOut" }}
-              />
-
-              {/* Number 0 */}
-              <motion.circle
-                cx="200"
-                cy="100"
-                r="50"
-                stroke="url(#gradient2)"
-                strokeWidth="8"
-                fill="none"
-                initial={{ pathLength: 0, rotate: -90 }}
-                animate={{ pathLength: 1, rotate: 0 }}
-                transition={{ duration: 2, ease: "easeInOut" }}
-                style={{ originX: "200px", originY: "100px" }}
-              />
-
-              {/* Number 4 */}
-              <motion.path
-                d="M260 50 V110 H320 M320 50 V150"
-                stroke="url(#gradient3)"
-                strokeWidth="8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, ease: "easeInOut", delay: 0.2 }}
-              />
-
-              {/* Gradient definitions */}
-              <defs>
-                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ef4444" />
-                  <stop offset="100%" stopColor="#dc2626" />
-                </linearGradient>
-                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ef4444" />
-                  <stop offset="100%" stopColor="#dc2626" />
-                </linearGradient>
-                <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ef4444" />
-                  <stop offset="100%" stopColor="#dc2626" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </motion.div>
-
-          {/* Floating animation for the crown icon */}
-          <motion.div
-            animate={{ y: [0, -20, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="mb-6"
-          >
-            <svg
-              className="w-16 h-16 mx-auto text-primary-500"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L15 9L22 9.5L17 14.5L18.5 22L12 18L5.5 22L7 14.5L2 9.5L9 9L12 2Z" />
-            </svg>
+            <FuzzyText
+              text="404"
+              baseIntensity={0.08}
+              hoverIntensity={0.25}
+              fontSize="clamp(4rem, 12vw, 8rem)"
+              fontWeight="900"
+              color="#ef4444"
+            />
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
+            className="mb-4"
           >
-            <h1 className="text-4xl md:text-5xl font-display font-black mb-4">
-              Página{' '}
-              <span className="gradient-text">No Encontrada</span>
-            </h1>
+            <FuzzyText
+              text="Página No Encontrada"
+              baseIntensity={0.03}
+              hoverIntensity={0.2}
+              fontSize="clamp(2rem, 5vw, 3.5rem)"
+              fontWeight="900"
+              color="#ef4444"
+              className="mb-2"
+            />
           </motion.div>
 
           <motion.p

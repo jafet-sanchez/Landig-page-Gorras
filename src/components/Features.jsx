@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { memo } from 'react'
 
 // iconos SVG
 const CrownIcon = () => (
@@ -178,4 +179,5 @@ const Features = () => {
   )
 }
 
-export default Features
+// Wrap with React.memo to prevent unnecessary re-renders
+export default memo(Features)
