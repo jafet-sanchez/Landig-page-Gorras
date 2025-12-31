@@ -1,0 +1,13 @@
+# robots.txt para KROWN
+# Este archivo indica a los motores de búsqueda qué pueden rastrear
+
+# Regla para todos los bots
+User-agent: *
+# Permitir acceso a todo el sitio
+Allow: /
+
+# Bloquear carpetas de desarrollo si existieran en producción
+Disallow: /node_modules/
+
+# Sitemap - Ubicación del mapa del sitio
+Sitemap: https://krown-gorras.vercel.app/sitemap.xml
