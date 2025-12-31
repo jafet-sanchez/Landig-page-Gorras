@@ -46,7 +46,7 @@ const Footer = () => {
             <div className="flex gap-4">
               <motion.a
                 whileHover={{ scale: 1.1, y: -2 }}
-                href="#"
+                href="https://www.instagram.com/sanchezzx_00?igsh=b2xmOHdsODB4YWRi"
                 className="w-10 h-10 bg-dark-700 hover:bg-primary-500 rounded-full flex items-center justify-center transition-colors"
                 aria-label="Instagram"
               >
