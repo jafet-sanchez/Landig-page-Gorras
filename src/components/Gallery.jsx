@@ -1,28 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useCallback, useRef, memo } from 'react'
+import { useState, useCallback, useRef, memo, useEffect } from 'react'
 import { getWhatsAppLink } from '../config/whatsapp'
-
-// Throttle helper for performance
-const throttle = (func, delay) => {
-  let timeoutId;
-  let lastExecTime = 0;
-  return (...args) => {
-    const currentTime = Date.now();
-    const timeSinceLastExec = currentTime - lastExecTime;
-
-    const exec = () => {
-      lastExecTime = currentTime;
-      func(...args);
-    };
-
-    if (timeSinceLastExec > delay) {
-      exec();
-    } else {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(exec, delay - timeSinceLastExec);
-    }
-  };
-};
 
 // Gorras disponibles de Barbas Hats con todas sus imágenes
 const products = [
@@ -88,7 +66,8 @@ const Gallery = () => {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isZoomed, setIsZoomed] = useState(false)
-  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 })
+  const imageRef = useRef(null)
+  const rafRef = useRef(null)
 
   // useCallback to prevent recreating functions on every render
   const handleProductClick = useCallback((product) => {
@@ -126,19 +105,27 @@ const Gallery = () => {
     }
   }, [selectedProduct])
 
-  // Throttled mouse move handler for better performance
-  const handleMouseMoveThrottled = useRef(
-    throttle((e) => {
-      const rect = e.currentTarget.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 100
-      const y = ((e.clientY - rect.top) / rect.height) * 100
-      setZoomPosition({ x, y })
-    }, 16) // ~60fps
-  ).current
-
+  // Optimized mouse move handler using requestAnimationFrame and CSS variables
   const handleMouseMove = useCallback((e) => {
-    handleMouseMoveThrottled(e)
-  }, [handleMouseMoveThrottled])
+    // Capture event values immediately before React recycles the synthetic event
+    const currentTarget = e.currentTarget
+    const clientX = e.clientX
+    const clientY = e.clientY
+
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+    }
+
+    rafRef.current = requestAnimationFrame(() => {
+      if (imageRef.current && currentTarget) {
+        const rect = currentTarget.getBoundingClientRect()
+        const x = ((clientX - rect.left) / rect.width) * 100
+        const y = ((clientY - rect.top) / rect.height) * 100
+        imageRef.current.style.setProperty('--zoom-x', `${x}%`)
+        imageRef.current.style.setProperty('--zoom-y', `${y}%`)
+      }
+    })
+  }, [])
 
   const handleMouseEnter = useCallback(() => {
     setIsZoomed(true)
@@ -147,6 +134,15 @@ const Gallery = () => {
   const handleMouseLeave = useCallback(() => {
     setIsZoomed(false)
   }, [])
+
+  // Cleanup animation frame on image change or unmount
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+      }
+    }
+  }, [currentImageIndex])
 
   return (
     <section id="gallery" className="py-20 bg-dark-900">
@@ -291,6 +287,7 @@ const Gallery = () => {
                     >
                       <AnimatePresence mode="wait">
                         <motion.img
+                          ref={imageRef}
                           key={currentImageIndex}
                           src={selectedProduct.images[currentImageIndex]}
                           alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
@@ -306,10 +303,14 @@ const Gallery = () => {
                           transition={{
                             opacity: { duration: 0.3, ease: [0.33, 1, 0.68, 1] },
                             x: { duration: 0.3, ease: [0.33, 1, 0.68, 1] },
-                            scale: { duration: 0.2, ease: "easeOut" }
+                            scale: { duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }
                           }}
                           style={{
-                            transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                            '--zoom-x': '50%',
+                            '--zoom-y': '50%',
+                            transformOrigin: 'var(--zoom-x) var(--zoom-y)',
+                            willChange: isZoomed ? 'transform' : 'auto',
+                            transform: 'translateZ(0)'
                           }}
                         />
                       </AnimatePresence>
@@ -443,5 +444,5 @@ const Gallery = () => {
   )
 }
 
-// Wrap with React.memo to prevent unnecessary re-renders
+
 export default memo(Gallery)
