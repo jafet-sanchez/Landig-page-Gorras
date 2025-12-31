@@ -251,7 +251,7 @@ const Gallery = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4 bg-black/90 backdrop-blur-sm"
               onClick={handleCloseModal}
             >
               <motion.div
@@ -274,12 +274,12 @@ const Gallery = () => {
                   </svg>
                 </motion.button>
 
-                <div className="grid md:grid-cols-2 gap-0">
+                <div className="grid md:grid-cols-2 gap-0 max-h-[90vh] md:max-h-none overflow-y-auto md:overflow-visible">
                   {/* Galería de imágenes */}
                   <div className="relative bg-gradient-to-br from-dark-700 to-dark-800">
                     {/* Imagen principal */}
                     <div
-                      className="aspect-square relative overflow-hidden"
+                      className="aspect-square md:aspect-square relative overflow-hidden min-h-[300px] max-h-[50vh] md:max-h-none"
                       style={{ cursor: isZoomed ? 'zoom-out' : 'zoom-in' }}
                       onMouseMove={handleMouseMove}
                       onMouseEnter={handleMouseEnter}
@@ -322,9 +322,9 @@ const Gallery = () => {
                             whileHover={{ scale: 1.1, x: -4 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={handlePrevImage}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-dark-900/80 hover:bg-primary-500 rounded-full text-white transition-colors"
+                            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-dark-900/80 hover:bg-primary-500 rounded-full text-white transition-colors"
                           >
-                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
                           </motion.button>
@@ -333,9 +333,9 @@ const Gallery = () => {
                             whileHover={{ scale: 1.1, x: 4 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={handleNextImage}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-dark-900/80 hover:bg-primary-500 rounded-full text-white transition-colors"
+                            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-dark-900/80 hover:bg-primary-500 rounded-full text-white transition-colors"
                           >
-                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
                           </motion.button>
@@ -343,20 +343,20 @@ const Gallery = () => {
                       )}
 
                       {/* Indicador de imagen */}
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-dark-900/80 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-semibold">
+                      <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 bg-dark-900/80 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full text-white text-xs md:text-sm font-semibold">
                         {currentImageIndex + 1} / {selectedProduct.images.length}
                       </div>
                     </div>
 
                     {/* Miniaturas */}
-                    <div className="p-4 flex gap-2 overflow-x-auto">
+                    <div className="p-2 md:p-4 flex gap-2 overflow-x-auto scrollbar-hide">
                       {selectedProduct.images.map((image, index) => (
                         <motion.button
                           key={index}
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => setCurrentImageIndex(index)}
-                          className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                          className={`relative flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 transition-colors ${
                             index === currentImageIndex
                               ? 'border-primary-500'
                               : 'border-white/20 hover:border-white/40'
@@ -374,13 +374,13 @@ const Gallery = () => {
                   </div>
 
                   {/* Información del producto */}
-                  <div className="p-8 flex flex-col justify-between">
+                  <div className="p-4 md:p-8 flex flex-col justify-between">
                     <div>
                       <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-3xl font-bold mb-4"
+                        className="text-xl md:text-3xl font-bold mb-3 md:mb-4"
                       >
                         {selectedProduct.name}
                       </motion.h2>
@@ -389,9 +389,9 @@ const Gallery = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="mb-8"
+                        className="mb-4 md:mb-8"
                       >
-                        <span className="text-4xl font-bold gradient-text">
+                        <span className="text-2xl md:text-4xl font-bold gradient-text">
                           {selectedProduct.price}
                         </span>
                       </motion.div>
@@ -400,12 +400,12 @@ const Gallery = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="space-y-4 text-gray-300"
+                        className="space-y-3 md:space-y-4 text-gray-300"
                       >
-                        <p className="text-lg">
+                        <p className="text-sm md:text-lg">
                           Gorra premium de edición limitada Barbas Hats x CT.
                         </p>
-                        <ul className="space-y-2">
+                        <ul className="space-y-2 text-sm md:text-base">
                           <li className="flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
                             Diseño exclusivo
@@ -429,7 +429,7 @@ const Gallery = () => {
                       whileHover={{ scale: 1.02, backgroundColor: "rgb(147, 51, 234)" }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleWhatsAppClick}
-                      className="w-full bg-primary-500 text-white py-4 rounded-full text-lg font-semibold shadow-lg shadow-primary-500/30 transition-colors"
+                      className="w-full bg-primary-500 text-white py-3 md:py-4 rounded-full text-base md:text-lg font-semibold shadow-lg shadow-primary-500/30 transition-colors"
                     >
                       Ordenar por WhatsApp
                     </motion.button>
