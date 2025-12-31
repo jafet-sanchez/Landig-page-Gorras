@@ -250,15 +250,15 @@ const Gallery = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4 bg-black/90 backdrop-blur-sm"
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4 bg-black/90"
               onClick={handleCloseModal}
             >
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
+                initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
                 className="relative w-full max-w-6xl bg-dark-800 rounded-2xl overflow-hidden border border-white/10"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -293,17 +293,15 @@ const Gallery = () => {
                           alt={`${selectedProduct.name} - ${currentImageIndex + 1}`}
                           loading="eager"
                           className="w-full h-full object-cover"
-                          initial={{ opacity: 0, x: 100, scale: 1 }}
+                          initial={{ opacity: 0 }}
                           animate={{
                             opacity: 1,
-                            x: 0,
                             scale: isZoomed ? 2 : 1
                           }}
-                          exit={{ opacity: 0, x: -100 }}
+                          exit={{ opacity: 0 }}
                           transition={{
-                            opacity: { duration: 0.3, ease: [0.33, 1, 0.68, 1] },
-                            x: { duration: 0.3, ease: [0.33, 1, 0.68, 1] },
-                            scale: { duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }
+                            opacity: { duration: 0.15 },
+                            scale: { duration: 0.15, ease: "easeOut" }
                           }}
                           style={{
                             '--zoom-x': '50%',
@@ -376,32 +374,17 @@ const Gallery = () => {
                   {/* Información del producto */}
                   <div className="p-4 md:p-8 flex flex-col justify-between">
                     <div>
-                      <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-xl md:text-3xl font-bold mb-3 md:mb-4"
-                      >
+                      <h2 className="text-xl md:text-3xl font-bold mb-3 md:mb-4">
                         {selectedProduct.name}
-                      </motion.h2>
+                      </h2>
 
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="mb-4 md:mb-8"
-                      >
+                      <div className="mb-4 md:mb-8">
                         <span className="text-2xl md:text-4xl font-bold gradient-text">
                           {selectedProduct.price}
                         </span>
-                      </motion.div>
+                      </div>
 
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="space-y-3 md:space-y-4 text-gray-300"
-                      >
+                      <div className="space-y-3 md:space-y-4 text-gray-300">
                         <p className="text-sm md:text-lg">
                           Gorra premium de edición limitada Barbas Hats x CT.
                         </p>
@@ -419,17 +402,14 @@ const Gallery = () => {
                             Ajuste perfecto
                           </li>
                         </ul>
-                      </motion.div>
+                      </div>
                     </div>
 
                     <motion.button
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
-                      whileHover={{ scale: 1.02, backgroundColor: "rgb(147, 51, 234)" }}
+                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={handleWhatsAppClick}
-                      className="w-full bg-primary-500 text-white py-3 md:py-4 rounded-full text-base md:text-lg font-semibold shadow-lg shadow-primary-500/30 transition-colors"
+                      className="w-full bg-primary-500 hover:bg-primary-600 text-white py-3 md:py-4 rounded-full text-base md:text-lg font-semibold shadow-lg shadow-primary-500/30 transition-colors"
                     >
                       Ordenar por WhatsApp
                     </motion.button>
