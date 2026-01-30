@@ -15,7 +15,7 @@ const products = [
       '/images/4.webp',
       '/images/6.webp',
     ],
-    price: '$195.800',
+    price: '$200.000',
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const products = [
       '/images/barbas9.jpg',
       '/images/CTGALAXY_--BARBASHATSxCTT.webp',
     ],
-    price: '$195.800',
+    price: '$200.000',
   },
   {
     id: 3,
@@ -45,7 +45,7 @@ const products = [
       '/images/barbascruz4.webp',
       '/images/barbascruz5.webp',
     ],
-    price: '$195.800',
+    price: '$200.000',
   },
   {
     id: 4,
@@ -58,7 +58,7 @@ const products = [
       '/images/15.webp',
       '/images/16.webp',
     ],
-    price: '$195.800',
+    price: '$200.000',
   },
 ]
 
