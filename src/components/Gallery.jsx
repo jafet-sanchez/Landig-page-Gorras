@@ -70,7 +70,7 @@ const products = [
       '/images/BarbasGrafiti (3).webp',
       '/images/BarbasGrafiti (4).webp',
     ],
-    price: '$195.000',
+    price: '$185.000',
   },
 ]
 
