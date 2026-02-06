@@ -60,6 +60,18 @@ const products = [
     ],
     price: '$200.000',
   },
+  {
+    id: 5,
+    name: 'BARBAS HATS X CT Barbas "GRAFFITI" G5',
+    mainImage: '/images/BarbasGrafiti (3).webp',
+    images: [
+      '/images/BarbasGrafiti (1).webp',
+      '/images/BarbasGrafiti (2).webp',
+      '/images/BarbasGrafiti (3).webp',
+      '/images/BarbasGrafiti (4).webp',
+    ],
+    price: '$195.000',
+  },
 ]
 
 const Gallery = () => {
